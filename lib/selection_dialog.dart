@@ -43,6 +43,10 @@ class _SelectionDialogState extends State<SelectionDialog> {
 
   @override
   Widget build(BuildContext context) => SimpleDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(color: Colors.white),
+        ),
         titlePadding: const EdgeInsets.all(0),
         title: Column(
           mainAxisSize: MainAxisSize.min,
@@ -127,11 +131,14 @@ class _SelectionDialogState extends State<SelectionDialog> {
             ),
           Expanded(
             flex: 4,
-            child: Text(
-              widget.showCountryOnly
-                  ? e.toCountryStringOnly()
-                  : e.toLongString(),
-              overflow: TextOverflow.fade,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                widget.showCountryOnly
+                    ? e.toCountryStringOnly()
+                    : e.toLongString(),
+                overflow: TextOverflow.fade,
+              ),
             ),
           ),
         ],

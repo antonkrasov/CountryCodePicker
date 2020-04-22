@@ -112,54 +112,85 @@ class CountryCodePickerState extends State<CountryCodePicker> {
   List<CountryCode> elements = [];
   List<CountryCode> favoriteElements = [];
 
+  TextEditingController textEditingController = TextEditingController();
+
   CountryCodePickerState(this.elements);
 
   @override
   Widget build(BuildContext context) {
-    Widget _widget;
-    if (widget.builder != null)
-      _widget = InkWell(
-        onTap: showCountryCodePickerDialog,
-        child: widget.builder(selectedItem),
-      );
-    else {
-      _widget = FlatButton(
-        padding: widget.padding,
-        onPressed: widget.enabled ? showCountryCodePickerDialog : null,
-        child: Flex(
-          direction: Axis.horizontal,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            if (widget.showFlag || (widget.showFlagMain == true))
-              Flexible(
-                flex: widget.alignLeft ? 0 : 1,
-                fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
-                child: Padding(
-                  padding: widget.alignLeft
-                      ? const EdgeInsets.only(right: 16.0, left: 8.0)
-                      : const EdgeInsets.only(right: 16.0),
-                  child: Image.asset(
-                    selectedItem.flagUri,
-                    package: 'country_code_picker',
-                    width: widget.flagWidth,
+    // Widget _widget;
+    // if (widget.builder != null)
+    //   _widget = InkWell(
+    //     onTap: showCountryCodePickerDialog,
+    //     child: widget.builder(selectedItem),
+    //   );
+    // else {
+    //   _widget = FlatButton(
+    //     padding: widget.padding,
+    //     onPressed: widget.enabled ? showCountryCodePickerDialog : null,
+    //     child: Flex(
+    //       direction: Axis.horizontal,
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: <Widget>[
+    //         if (widget.showFlag || (widget.showFlagMain == true))
+    //           Flexible(
+    //             flex: widget.alignLeft ? 0 : 1,
+    //             fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
+    //             child: Padding(
+    //               padding: widget.alignLeft
+    //                   ? const EdgeInsets.only(right: 16.0, left: 8.0)
+    //                   : const EdgeInsets.only(right: 16.0),
+    //               child: Image.asset(
+    //                 selectedItem.flagUri,
+    //                 package: 'country_code_picker',
+    //                 width: widget.flagWidth,
+    //               ),
+    //             ),
+    //           ),
+    //         Flexible(
+    //           fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
+    //           child: Text(
+    //             widget.showOnlyCountryWhenClosed
+    //                 ? selectedItem.toCountryStringOnly()
+    //                 : selectedItem.toString(),
+    //             style: widget.textStyle ?? Theme.of(context).textTheme.button,
+    //             overflow: widget.textOverflow,
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
+    // return _widget;
+
+    return Row(
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: showCountryCodePickerDialog,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+              ),
+              child: AbsorbPointer(
+                child: TextField(
+                  controller: textEditingController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
                   ),
                 ),
               ),
-            Flexible(
-              fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
-              child: Text(
-                widget.showOnlyCountryWhenClosed
-                    ? selectedItem.toCountryStringOnly()
-                    : selectedItem.toString(),
-                style: widget.textStyle ?? Theme.of(context).textTheme.button,
-                overflow: widget.textOverflow,
-              ),
             ),
-          ],
+          ),
         ),
-      );
-    }
-    return _widget;
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    textEditingController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -248,11 +279,15 @@ class CountryCodePickerState extends State<CountryCodePicker> {
     if (widget.onChanged != null) {
       widget.onChanged(e);
     }
+
+    textEditingController.text = e.toLongString();
   }
 
   void _onInit(CountryCode e) {
     if (widget.onInit != null) {
       widget.onInit(e);
     }
+
+    textEditingController.text = e.toLongString();
   }
 }
